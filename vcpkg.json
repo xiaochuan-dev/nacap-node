@@ -2,7 +2,7 @@
   "dependencies": [
     "node-addon-api",
     {
-      "name": "libcap",
+      "name": "libpcap",
       "platform": "!windows"
     }
   ]
