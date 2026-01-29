@@ -1,13 +1,15 @@
 {
   "name": "@xiaochuan-dev/nacap-node",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "repository": {
     "url": "https://github.com/xiaochuan-dev/nacap-node"
   },
   "main": "./index.js",
   "files": [
-    "dist"
+    "dist",
+    "index.js",
+    "index.d.ts"
   ],
   "publishConfig": {
     "access": "public",
