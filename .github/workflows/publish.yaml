@@ -188,7 +188,7 @@ jobs:
 
       - name: Publish package
         run: |
-          pnpm publish --provenance --filter "./packages/node-release"
+          pnpm publish --provenance --no-git-checks --filter "./packages/node-release"
           echo "✅ Published successfully!"
         env:
           NPM_CONFIG_PROVENANCE: true
