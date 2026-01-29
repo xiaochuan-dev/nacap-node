@@ -16,8 +16,7 @@
       "name": "Debug js",
       "type": "node",
       "request": "launch",
-      "args": ["index.js"],
-      "cwd": "${workspaceFolder}/packages/tests"
+      "args": ["index.js"]
     }
   ]
 }

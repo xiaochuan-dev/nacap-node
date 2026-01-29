@@ -1,0 +1,168 @@
+name: Publish
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+
+      - name: 安装vcpkg
+        id: setup-vcpkg
+        run: |
+          $url = "https://github.com/microsoft/vcpkg/archive/refs/tags/2026.01.16.zip"
+          $zipFile = "vcpkg-2026.01.16.zip"
+
+          # 下载vcpkg
+          Invoke-WebRequest -Uri $url -OutFile $zipFile
+
+          # 解压
+          $extractPath = "vcpkg-temp"
+          Expand-Archive -Path $zipFile -DestinationPath $extractPath -Force
+          Remove-Item $zipFile
+
+          # 进入正确的目录（压缩包内层目录）
+          $vcpkgDir = Get-ChildItem -Path $extractPath -Directory | Select-Object -First 1
+          $vcpkgRoot = $vcpkgDir.FullName
+
+          # 进入vcpkg目录并运行bootstrap
+          Set-Location $vcpkgRoot
+          .\bootstrap-vcpkg.bat
+
+          # 设置环境变量
+          echo "VCPKG_ROOT=$vcpkgRoot" >> $env:GITHUB_ENV
+          echo "$vcpkgRoot" >> $env:GITHUB_PATH
+
+          # 输出变量供后续步骤使用
+          echo "vcpkg_path=$vcpkgRoot" >> $env:GITHUB_OUTPUT
+      
+      - name: 验证环境变量
+        run: |
+          echo "VCPKG_ROOT = $env:VCPKG_ROOT"
+          echo "PATH 中包含 vcpkg = $env:PATH"
+          # 测试 vcpkg 命令
+          vcpkg --version
+
+      - name: build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+          cmake --build build --config Release
+      - name: upload file
+        uses: actions/upload-artifact@v5
+        with:
+          name: windows-artifact
+          path: ./build/Release
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      
+      - name: 安装vcpkg
+        id: setup-vcpkg-linux
+        run: |
+          # 下载vcpkg
+          wget https://github.com/microsoft/vcpkg/archive/refs/tags/2026.01.16.tar.gz
+          
+          # 解压
+          tar -xzf 2026.01.16.tar.gz
+          rm -f 2026.01.16.tar.gz
+          
+          # 进入vcpkg目录并运行bootstrap
+          cd vcpkg-2026.01.16
+          ./bootstrap-vcpkg.sh
+          
+          # 设置环境变量
+          echo "VCPKG_ROOT=$(pwd)" >> $GITHUB_ENV
+          echo "$(pwd)" >> $GITHUB_PATH
+      
+      - name: 安装构建依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config
+      
+      - name: 验证环境变量
+        run: |
+          echo "VCPKG_ROOT = $VCPKG_ROOT"
+          which vcpkg
+          vcpkg --version
+      
+      - name: build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+          cmake --build build --config Release
+      
+      - name: upload file
+        uses: actions/upload-artifact@v5
+        with:
+          name: linux-artifact
+          path: ./build/
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+      
+      - name: 安装vcpkg
+        id: setup-vcpkg-macos
+        run: |
+          # 下载vcpkg
+          curl -L -o vcpkg-2026.01.16.tar.gz https://github.com/microsoft/vcpkg/archive/refs/tags/2026.01.16.tar.gz
+          
+          # 解压
+          tar -xzf vcpkg-2026.01.16.tar.gz
+          rm -f vcpkg-2026.01.16.tar.gz
+          
+          # 进入vcpkg目录并运行bootstrap
+          cd vcpkg-2026.01.16
+          ./bootstrap-vcpkg.sh
+          
+          # 设置环境变量
+          echo "VCPKG_ROOT=$(pwd)" >> $GITHUB_ENV
+          echo "$(pwd)" >> $GITHUB_PATH
+      
+      - name: 安装构建依赖
+        run: |
+          brew update
+          brew install cmake ninja pkg-config
+      
+      - name: 验证环境变量
+        run: |
+          echo "VCPKG_ROOT = $VCPKG_ROOT"
+          which vcpkg
+          vcpkg --version
+      
+      - name: build
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+          cmake --build build --config Release
+      
+      - name: upload file
+        uses: actions/upload-artifact@v5
+        with:
+          name: macos-artifact
+          path: ./build/
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [
+      build-windows,
+      build-linux,
+      build-macos
+    ]
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: ./dist
+          
+      - name: List all Files
+        run: |
+          ls -l dist 
+        

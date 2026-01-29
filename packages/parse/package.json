@@ -1,5 +1,5 @@
 {
-  "name": "@xiaochuan-dev/nacap-windows-parse",
+  "name": "@xiaochuan-dev/nacap-parse",
   "version": "0.0.1",
   "description": "",
   "main": "./dist/index.js",

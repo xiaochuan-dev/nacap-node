@@ -1,17 +1,20 @@
 {
-  "name": "@xiaochuan-dev/nacap-windows-node",
+  "name": "@xiaochuan-dev/nacap-node",
   "version": "0.0.1",
   "description": "",
-  "main": "./dist/nacap-napi-module.node",
+  "main": "./index.js",
+  "files": [
+    "dist"
+  ],
   "types": "index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/nacap-napi-module.node",
+      "require": "./index.js",
       "types": "./index.d.ts"
     }
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",
