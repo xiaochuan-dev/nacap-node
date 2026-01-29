@@ -195,4 +195,3 @@ jobs:
           echo "✅ Published successfully!"
         env:
           NPM_CONFIG_PROVENANCE: true
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
