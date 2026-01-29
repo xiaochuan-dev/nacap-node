@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "node-addon-api",
+    {
+      "name": "libcap",
+      "platform": "!windows"
+    }
+  ]
+}

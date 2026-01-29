@@ -1,0 +1,19 @@
+{
+  "name": "@xiaochuan-dev/nacap-windows-node",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/nacap-napi-module.node",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/nacap-napi-module.node",
+      "types": "./index.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

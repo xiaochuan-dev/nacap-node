@@ -1,0 +1,19 @@
+{
+  "name": "nacap-windows-node",
+  "version": "0.0.1",
+  "packageManager": "pnpm@10.28.2",
+  "private": true,
+  "scripts": {
+    "build:node": "cmake --build build && node scripts/copy-node.js",
+    "build": "pnpm -r build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.1.0",
+    "fs-extra": "^11.3.3",
+    "typescript": "^5.9.3"
+  }
+}

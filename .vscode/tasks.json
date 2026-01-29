@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "config",
+			"command": "cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${env:VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "build",
+			"command": "cmake --build build",
+            "problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "clean",
+			"command": "powershell Remove-Item build -Recurse -Force -ErrorAction SilentlyContinue",
+            "problemMatcher": []
+		}
+	]
+}
