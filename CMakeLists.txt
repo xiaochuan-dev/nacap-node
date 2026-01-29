@@ -16,7 +16,21 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     SUFFIX ".node"
     OUTPUT_NAME "${PROJECT_NAME}"
 )
-if(WIN32)
+
+if(UNIX AND NOT APPLE)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(PCAP REQUIRED libpcap)
+    message(STATUS "Found libpcap: ${PCAP_LIBRARIES}")
+    message(STATUS "libpcap include dirs: ${PCAP_INCLUDE_DIRS}")
+
+    if(PCAP_LIBRARIES)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PCAP_LIBRARIES})
+    endif()
+
+elseif(APPLE)
+    find_library(PCAP_LIBRARIES pcap)
+    find_path(PCAP_INCLUDE_DIRS pcap.h PATH_SUFFIXES pcap)
+elseif(WIN32)
     add_definitions(-D_WINDLL)
     set_target_properties(${PROJECT_NAME} PROPERTIES
         WINDOWS_EXPORT_ALL_SYMBOLS OFF
