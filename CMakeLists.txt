@@ -18,13 +18,31 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 if(UNIX AND NOT APPLE)
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(PCAP REQUIRED libpcap)
-    message(STATUS "Found libpcap: ${PCAP_LIBRARIES}")
-    message(STATUS "libpcap include dirs: ${PCAP_INCLUDE_DIRS}")
+    # 首先尝试使用vcpkg安装的libpcap
+    find_library(VCPKG_PCAP_LIB pcap
+        PATHS "${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/x64-linux/lib"
+        NO_DEFAULT_PATH
+    )
+    
+    if(VCPKG_PCAP_LIB)
+        message(STATUS "Found vcpkg libpcap: ${VCPKG_PCAP_LIB}")
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${VCPKG_PCAP_LIB})
+        
+        # 添加vcpkg的包含目录
+        target_include_directories(${PROJECT_NAME} PRIVATE
+            "${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/x64-linux/include"
+        )
+    else()
+        # 如果vcpkg没有找到，回退到系统pkg-config
+        message(STATUS "Using system libpcap via pkg-config")
+        find_package(PkgConfig REQUIRED)
+        pkg_check_modules(PCAP REQUIRED libpcap)
+        message(STATUS "Found libpcap: ${PCAP_LIBRARIES}")
+        message(STATUS "libpcap include dirs: ${PCAP_INCLUDE_DIRS}")
 
-    if(PCAP_LIBRARIES)
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PCAP_LIBRARIES})
+        if(PCAP_LIBRARIES)
+            target_link_libraries(${PROJECT_NAME} PRIVATE ${PCAP_LIBRARIES})
+        endif()
     endif()
 
 elseif(APPLE)
