@@ -157,12 +157,23 @@ jobs:
       build-macos
     ]
     steps:
+      - uses: actions/checkout@v6
+
       - name: Download all artifacts
         uses: actions/download-artifact@v5
         with:
-          path: ./dist
+          path: ./dist-temp
           
       - name: List all Files
         run: |
           ls -l dist 
-        
+      - name: move
+        run: |
+          mkdir -p ./packages/node-release/dist
+          cp ./dist-temp/linux-artifact/nacap-napi-module.node ./packages/node-release/dist/ncap-linux.node
+          cp ./dist-temp/windows-artifact/nacap-napi-module.node ./packages/node-release/dist/ncap-win32.node      
+          cp ./dist-temp/macos-artifact/nacap-napi-module.node ./packages/node-release/dist/ncap-darwin.node
+      
+      - name: List dist
+        run: |
+          ls ./packages/node-release/dist
