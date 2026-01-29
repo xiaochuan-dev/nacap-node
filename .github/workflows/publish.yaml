@@ -1,5 +1,9 @@
 name: Publish
 
+permissions:
+  id-token: write
+  contents: read
+
 on:
   push:
   workflow_dispatch:
@@ -177,3 +181,14 @@ jobs:
       - name: List dist
         run: |
           ls ./packages/node-release/dist
+
+      - run: corepack enable
+
+      - run: pnpm install
+
+      - name: Publish package
+        run: |
+          pnpm publish --provenance --filter "./packages/node-release"
+          echo "✅ Published successfully!"
+        env:
+          NPM_CONFIG_PROVENANCE: true
