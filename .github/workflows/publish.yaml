@@ -182,16 +182,14 @@ jobs:
         run: |
           ls ./packages/node-release/dist
 
-      - run: corepack enable
+      # - run: corepack enable
 
-      - run: pnpm install
+      # - run: pnpm install
 
       - name: Publish package
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          echo "registry=https://registry.npmjs.org/" >> .npmrc
-          echo "always-auth=true" >> .npmrc
-          pnpm publish --provenance --no-git-checks --access public --filter "./packages/node-release"
+          cd ./packages/node-release
+          npm publish --provenance --access public
           echo "✅ Published successfully!"
         env:
           NPM_CONFIG_PROVENANCE: true
