@@ -13,10 +13,17 @@
       "preLaunchTask": "build"
     },
     {
-      "name": "Debug js",
+      "name": "Debug test js",
       "type": "node",
       "request": "launch",
-      "args": ["index.js"]
+      "args": ["test.js"]
+    },
+    {
+      "name": "Debug parse js",
+      "type": "node",
+      "request": "launch",
+      "args": ["dist/index.js"],
+      "cwd": "${workspaceFolder}/packages/parse"
     }
   ]
 }

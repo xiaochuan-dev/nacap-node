@@ -9,6 +9,6 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],
+  "include": ["src", "packages"],
   "exclude": ["node_modules"]
 }

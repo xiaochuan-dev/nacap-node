@@ -1,3 +1,2 @@
-export function f() {
-  console.log('hello world');
-}
+export * from './parse';
+export * from './utils';

@@ -24,10 +24,10 @@ importers:
 
   packages/tests:
     devDependencies:
-      '@xiaochuan-dev/nacap-windows-node':
+      '@xiaochuan-dev/nacap-node':
         specifier: workspace:*
         version: link:../node-release
-      '@xiaochuan-dev/nacap-windows-parse':
+      '@xiaochuan-dev/nacap-parse':
         specifier: workspace:*
         version: link:../parse
 
