@@ -190,13 +190,13 @@ jobs:
 
       - run: pnpm install
 
+      - name: build
+        run: |
+          pnpm -r build
+
       - name: Publish package
         run: |
-          pnpm publish --provenance --no-git-checks --access public --filter "./packages/node-release"
+          pnpm publish --provenance --no-git-checks --access public"
           echo "✅ Published successfully!"
-
-          # cd ./packages/node-release
-          # npm publish --provenance --access public
-          # echo "✅ Published successfully!"
         env:
           NPM_CONFIG_PROVENANCE: true
