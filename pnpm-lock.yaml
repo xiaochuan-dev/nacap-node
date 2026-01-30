@@ -22,15 +22,6 @@ importers:
 
   packages/parse: {}
 
-  packages/tests:
-    devDependencies:
-      '@xiaochuan-dev/nacap-node':
-        specifier: workspace:*
-        version: link:../node-release
-      '@xiaochuan-dev/nacap-parse':
-        specifier: workspace:*
-        version: link:../parse
-
 packages:
 
   '@types/node@25.1.0':
