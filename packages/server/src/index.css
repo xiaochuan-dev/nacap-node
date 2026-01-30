@@ -1,0 +1,67 @@
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/font.woff2') format('woff2');
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  box-sizing: border-box;
+  padding: 10px;
+  height: 100vh;
+}
+
+.left {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.t-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dev {
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+}
+
+.arco-list-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.arco-list-item:hover {
+  background: #e9e9e9;
+  cursor: pointer;
+}
+
+.packet-list {
+  flex-grow: 1;
+}
+
+.packet-header {
+  text-align: center;
+}
+
+.packet-hex {
+  margin-top: 10px;
+  overflow-y: auto;
+  height: 260px;
+}
+
+.packet-hex-text {
+  font-family: 'JetBrains Mono';
+  white-space: pre-line;
+  margin: 0 auto;
+  width: 400px;
+}
