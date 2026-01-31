@@ -1,5 +1,6 @@
 import { ETH } from './protocol/eth';
 import { IPV4, ARP } from './protocol/network';
+import { UDP } from './protocol/transport';
 
 export class Parse {
 
@@ -15,21 +16,58 @@ export class Parse {
     const layer1 = this.parseEth();
     layers.push(layer1);
 
-    let layer2 = null;
     switch (layer1.typeLengthNum) {
-      case ETH.EtherType.IPV4:
-        layer2 = this.parseIPV4();
-        break;
-      case ETH.EtherType.ARP:
-        layer2 = this.parseArp();
+      case ETH.EtherType.IPV4: {
+        const ipLayer = this.parseIPV4();
+        layers.push(ipLayer);
 
+        switch (ipLayer.protocol) {
+          case IPV4.IPv4Protocol.UDP: {
+            const udpLayer = this.parseUdp();
+            layers.push(udpLayer);
+            break;
+          }
+        
+          default:
+            break;
+        }
+
+        break;
+      }
+      case ETH.EtherType.ARP: {
+        const arpLayer = this.parseArp();
+        layers.push(arpLayer);
+        break;
+      }
       default:
 
         break;
     }
-    layers.push(layer2);
 
     return layers;
+  }
+
+  private parseUdp(): UDP.Udp {
+    const { data } = this;
+
+    const srcPort = data.readUint16BE(this.offset);
+    this.offset += 2;
+    const dstPort = data.readUint16BE(this.offset);
+    this.offset += 2;
+
+    const udpLength = data.readUint16BE(this.offset);
+    this.offset += 2;
+
+    const checksum = data.readUint16BE(this.offset);
+    this.offset += 2;
+
+    return {
+      _type: 'udp',
+      srcPort,
+      dstPort,
+      udpLength,
+      checksum
+    };
   }
 
   private parseArp(): ARP.ARP {
